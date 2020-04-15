@@ -8,64 +8,82 @@
       <el-button type="info" @click="outLogin">退出</el-button>
     </el-header>
     <el-container>
-      <el-aside width="200px">
-        <h5>自定义颜色</h5>
+      <el-aside :width="isCollapse ? '64px' : '200px'">
+        <div class="close" @click="changeClose">
+          {{ isCollapse === true ? "|||" : "三" }}
+        </div>
         <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
           background-color="#545c64"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="#03a9f4"
+          unique-opened
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          router
+          :default-active="activePath"
         >
-          <el-submenu index="1">
+          <el-submenu
+            :index="'/' + item.path"
+            v-for="item in menuList"
+            :key="item.id"
+          >
             <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>导航一</span>
+              <i class="el-icon-user"></i>
+              <span>{{ item.authName }}</span>
             </template>
-            <!-- <template slot="title">分组一</template> -->
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-            <!-- <el-menu-item-group title="分组2">
-                <el-menu-item index="1-3">选项3</el-menu-item>
-              </el-menu-item-group>
-              <el-submenu index="1-4">
-                <template slot="title">选项4</template>
-                <el-menu-item index="1-4-1">选项1</el-menu-item>
-            </el-submenu>-->
+            <el-menu-item
+              :index="'/' + subitem.path"
+              v-for="subitem in item.children"
+              :key="subitem.id"
+              @click="saveStatus('/' + subitem.path)"
+            >
+              <template slot="title">
+                <i class="el-icon-menu"></i>
+                <span>{{ subitem.authName }}</span>
+              </template>
+            </el-menu-item>
           </el-submenu>
-          <el-menu-item index="2">
-            <i class="el-icon-menu"></i>
-            <span slot="title">导航二</span>
-          </el-menu-item>
-          <el-menu-item index="3">
-            <i class="el-icon-document"></i>
-            <span slot="title">导航三</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <i class="el-icon-setting"></i>
-            <span slot="title">导航四</span>
-          </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
 export default {
+  created() {
+    this.getMenuList();
+    this.activePath = sessionStorage.getItem("path");
+  },
   data() {
-    return {};
+    return {
+      menuList: [],
+      isCollapse: false,
+      activePath: ""
+    };
   },
   methods: {
     outLogin() {
-      console.log("退出登录");
-      console.log(this);
       this.$message.success("退出成功");
       sessionStorage.clear();
       setTimeout(() => {
         this.$router.push("/login");
       }, 500);
+    },
+    saveStatus(path) {
+      sessionStorage.setItem("path", path);
+      this.activePath = path;
+    },
+    changeClose() {
+      this.isCollapse = !this.isCollapse;
+    },
+    async getMenuList() {
+      const { data: res } = await this.$http.get("menus");
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+      this.menuList = res.data;
     }
   }
 };
@@ -93,6 +111,18 @@ export default {
   height: 100vh;
 }
 .el-aside {
-  background-color: #0d47a1;
+  background-color: #545c64;
+  .close {
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: 0.2rem;
+  }
+}
+.el-main {
+  background-color: #eaedf1;
+}
+.el-menu {
+  border-right: none;
 }
 </style>

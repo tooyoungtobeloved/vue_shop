@@ -7,9 +7,9 @@
       <div class="inputBox">
         <!-- label-width="80px" 指定form宽度-->
         <el-form ref="loginFormRef" :model="input" :rules="rules">
-          <el-form-item prop="name">
+          <el-form-item prop="username">
             <el-input
-              v-model="input.name"
+              v-model="input.username"
               prefix-icon="iconfont icon-xingmingyonghumingnicheng"
             >
             </el-input>
@@ -36,11 +36,11 @@ export default {
   data() {
     return {
       input: {
-        name: "",
-        password: ""
+        username: "admin",
+        password: "123456"
       },
       rules: {
-        name: [
+        username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
           { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
         ],
@@ -55,8 +55,8 @@ export default {
     onSubmit() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
-        const { data: res } = await this.$http.post("/vueShop/login", this.input);
-        if (res.meta.status !== "200") return this.$message.error("登录失败");
+        const { data: res } = await this.$http.post("login", this.input);
+        if (res.meta.status !== 200) return this.$message.error("登录失败");
         // 将登录成功之后的token保存到sessionStorage
         sessionStorage.setItem("token", res.data.token);
         this.$message.success("登录成功");
