@@ -39,7 +39,9 @@
                           type="success"
                           closable
                           @close="removeRightById(scope.row, item2.id)"
-                        >{{ item2.authName }}</el-tag>
+                        >
+                          {{ item2.authName }}
+                        </el-tag>
                         <i class="el-icon-caret-right"></i>
                       </el-col>
                       <el-col :span="18">

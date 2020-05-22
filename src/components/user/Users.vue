@@ -101,7 +101,11 @@
             <el-table-column prop="role_name" label="角色"></el-table-column>
             <el-table-column label="状态">
               <template v-slot="scope">
-                <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"></el-switch>
+                <el-switch
+                  v-model="scope.row.mg_state"
+                  @change="userStateChange(scope.row)"
+                >
+                </el-switch>
               </template>
             </el-table-column>
             <el-table-column label="操作">
