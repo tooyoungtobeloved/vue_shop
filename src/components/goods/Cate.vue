@@ -184,7 +184,6 @@ export default {
     // 选中项变化触发
     parentCateChange() {
       // console.log(this.selectedKeys);\
-      console.log(this.addCateForm.cat_name);
       if (this.selectedKeys.length > 0) {
         // 父级分类的ID
         this.addCateForm.cat_pid = this.selectedKeys[
@@ -200,7 +199,6 @@ export default {
     // 添加分类
     addCate() {
       this.$refs.addCateFormRef.validate(async valid => {
-        console.log(valid);
         if (!valid) return;
         const { data: res } = await this.$http.post(
           "categories",
