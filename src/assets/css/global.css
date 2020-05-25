@@ -33,3 +33,13 @@ html, body, #app {
   height: 300px;
   width: 200px;
 }
+.el-steps{
+  margin: 15px 0px;
+  justify-content: center;
+}
+.el-step__title{
+  font-size: 13px;
+}
+.ql-editor{
+  min-height: 300px;
+}
